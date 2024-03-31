@@ -2,7 +2,7 @@ from tabuleiro import Tabuleiro
 from quartoEnum import Quarto
 from jogo import primitivo, minimax
 
-def main():
+if __name__ == "__main__":
     tabuleiro = Tabuleiro()
     while primitivo(tabuleiro) == Quarto.INDECISO:
         tabuleiro.imprimir_tabuleiro()
