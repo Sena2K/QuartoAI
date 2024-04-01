@@ -47,5 +47,3 @@ if __name__ == "__main__":
             print("Fim de jogo.")
             print("Empate!")
             break
-
-main()
