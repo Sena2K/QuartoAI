@@ -39,14 +39,9 @@ Q-Values (or action-value function) represent the expected future rewards for an
 2. **Choose Action**: The AI selects an action using an epsilon-greedy policy to balance exploration and exploitation.
 3. **Perform Action**: The chosen action is performed, and the new state is observed.
 4. **Update Q-Value**: The Q-value for the state-action pair is updated using the Q-Learning update rule:
-   \[
-   Q(s, a) \leftarrow Q(s, a) + \alpha \left[ r + \gamma \max_{a'} Q(s', a') - Q(s, a) \right]
-   \]
-   where:
-   - \( \alpha \) is the learning rate
-   - \( \gamma \) is the discount factor
-   - \( r \) is the reward received
-   - \( s' \) is the new state after performing action \( a \)
+
+   Q(s, a) ← Q(s, a) + α [ r + γ max Q(s', a') - Q(s, a) ]
+
 
 ### Game Rules
 The aim of Quarto is to place the fourth piece in a row (horizontally, vertically, or diagonally) where all pieces have at least one attribute in common. The game is played on a 4x4 board, and there are 16 unique pieces. Each piece has four characteristics: color (light or dark), height (tall or short), shape (round or square), and consistency (solid or hollow).
