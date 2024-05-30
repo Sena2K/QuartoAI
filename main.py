@@ -1,49 +1,27 @@
-from tabuleiro import Tabuleiro
-from quartoEnum import Quarto
-from jogo import primitivo, minimax
+from ia import treinar_ia, jogar_contra_ia, assistir_jogo_ia, carregar_q, salvar_q
 
 if __name__ == "__main__":
-    tabuleiro = Tabuleiro()
-    while primitivo(tabuleiro) == Quarto.INDECISO:
-        tabuleiro.imprimir_tabuleiro()
-        if tabuleiro.jogador() == 1:
-            print("Vez do Jogador 1 selecionar uma peça para o Jogador 2:")
-            print(tabuleiro.get_nomes_pecas())
-            indice_peca = int(input("Escolha um índice de peça: "))
-            print(f"Você deu ao Jogador 2 a peça {tabuleiro.get_pecas()[indice_peca].get_nome_peca()}.")
-            
-            print("AI pensando...")
-            _, movimento = minimax(tabuleiro, 2, float('-inf'), float('inf'), False)
-            if movimento:
-                _, linha, coluna = movimento
-                tabuleiro.colocar_peca(indice_peca, linha, coluna)
-                print(f"AI colocou a peça em ({linha}, {coluna})")
-            else:
-                print("AI não encontrou um movimento válido. Algo deu errado.")
-        else:
-            print("AI selecionando uma peça para o Jogador 1...")
-            _, movimento = minimax(tabuleiro, 2, float('-inf'), float('inf'), True)
-            if movimento:
-                indice_peca = movimento[0]
-                print(f"AI te dá a peça {tabuleiro.get_pecas()[indice_peca].get_nome_peca()}.")
-                
-                linha = int(input("Escolha a linha para colocar a peça: "))
-                coluna = int(input("Escolha a coluna para colocar a peça: "))
-                if not tabuleiro.colocar_peca(indice_peca, linha, coluna):
-                    print("Movimento inválido, tente novamente.")
-                    continue
-            else:
-                print("AI não encontrou um movimento válido. Algo deu errado.")
+    Q = carregar_q()
+    while True:
+        print("\nEscolha uma opção:")
+        print("1 - Treinar o modelo")
+        print("2 - Jogar contra a IA")
+        print("3 - Ver um jogo de IA contra IA")
+        print("4 - Sair")
 
-        if tabuleiro.verificar_vitoria():
-            print("Fim de jogo.")
-            tabuleiro.imprimir_tabuleiro()
-            if tabuleiro.jogador() == 1:
-                print("Você ganhou!")
-            else:
-                print("AI venceu!")
+        escolha = input("Digite sua opção: ")
+
+        if escolha == '1':
+            num_partidas = int(input("Digite o número de partidas para treinar: "))
+            Q = treinar_ia(num_partidas)
+            salvar_q(Q, 'tabela_q.pkl')
+            print("Treinamento concluído e modelo salvo.")
+        elif escolha == '2':
+            jogar_contra_ia(Q)
+        elif escolha == '3':
+            assistir_jogo_ia(Q)
+        elif escolha == '4':
+            print("Saindo do programa...")
             break
-        elif all(peca is None for peca in tabuleiro.get_pecas()):
-            print("Fim de jogo.")
-            print("Empate!")
-            break
+        else:
+            print("Opção inválida. Por favor, escolha uma opção válida.")

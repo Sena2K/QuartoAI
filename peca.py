@@ -4,16 +4,16 @@ class Peca():
         self.nome_completo = ""
         self.abreviacao = ""
         if atributos & 0b0001:
-            self.nome_completo += "Alta"
+            self.nome_completo += "Alto"
             self.abreviacao += "A"
         else:
-            self.nome_completo += "Baixa"
+            self.nome_completo += "Baixo"
             self.abreviacao += "B"
         if atributos & 0b0010:
-            self.nome_completo += " preta"
+            self.nome_completo += " preto"
             self.abreviacao += "P"
         else:
-            self.nome_completo += " branca"
+            self.nome_completo += " branco"
             self.abreviacao += "B"
         if atributos & 0b0100:
             self.nome_completo += " círculo"
@@ -22,11 +22,17 @@ class Peca():
             self.nome_completo += " quadrado"
             self.abreviacao += "Q"
         if atributos & 0b1000:
-            self.nome_completo += " sólida"
+            self.nome_completo += " sólido"
             self.abreviacao += "S"
         else:
-            self.nome_completo += " oca"
+            self.nome_completo += " oco"
             self.abreviacao += "O"
+
+    def __hash__(self):
+        return hash((self.atributos, self.abreviacao))
+
+    def __eq__(self, other):
+        return isinstance(other, Peca) and self.atributos == other.atributos
 
     def get_atributos(self):
         return self.atributos
@@ -35,4 +41,7 @@ class Peca():
         return self.nome_completo
 
     def get_abrev_peca(self):
+        return self.abreviacao
+
+    def estado(self):
         return self.abreviacao

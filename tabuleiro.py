@@ -1,9 +1,9 @@
 from copy import deepcopy
 from peca import Peca
+from quarto import Quarto
 
 class Tabuleiro():
     def __init__(self):
-        self.pecas = []
         self.qtd_colunas = 4
         self.qtd_linhas = 4
         self.tabuleiro = [[None for _ in range(self.qtd_colunas)] for _ in range(self.qtd_linhas)]
@@ -69,13 +69,13 @@ class Tabuleiro():
         if self.atributos_comuns(diag_esq_dir) or self.atributos_comuns(diag_dir_esq):
             return True
         return False
-    
+
     def verificar_vitoria(self):
         return any([
-        self.verificar_vitoria_horizontal(),
-        self.verificar_vitoria_vertical(),
-        self.verificar_vitoria_diagonal(),
-    ])
+            self.verificar_vitoria_horizontal(),
+            self.verificar_vitoria_vertical(),
+            self.verificar_vitoria_diagonal(),
+        ])
 
     def jogador(self):
         return 1 if len([peca for linha in self.tabuleiro for peca in linha if peca is not None]) % 2 == 0 else 2
@@ -94,3 +94,25 @@ class Tabuleiro():
             self.pecas.remove(peca)
             return True
         return False
+
+def avaliar_estado(estado):
+    if estado.verificar_vitoria_horizontal() or estado.verificar_vitoria_vertical() or estado.verificar_vitoria_diagonal():
+        return Quarto.VITORIA
+    if all(peca is not None for linha in estado.get_tabuleiro() for peca in linha):
+        return Quarto.EMPATE
+    return Quarto.INDECISO
+
+def tabuleiro_para_estado(tabuleiro):
+    return tuple(tuple(peca.estado() if peca else None for peca in linha) for linha in tabuleiro.get_tabuleiro())
+
+def estado_para_tabuleiro(estado):
+    tabuleiro = Tabuleiro()
+    for i, linha in enumerate(estado):
+        for j, abreviacao in enumerate(linha):
+            if abreviacao is not None:
+                for peca in tabuleiro.pecas:
+                    if peca.get_abrev_peca() == abreviacao:
+                        tabuleiro.tabuleiro[i][j] = peca
+                        tabuleiro.pecas.remove(peca)
+                        break
+    return tabuleiro
