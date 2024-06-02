@@ -139,7 +139,7 @@ def recompensa(estado, acao, novo_estado):
         return 1.0  # Grande recompensa por vencer
     elif novo_resultado == Quarto.DERROTA:
         return -1.0  # Grande penalidade por perder
-    elif novo_resultado == Quarto.EMPATE:   
+    elif novo_resultado == Quarto.EMPATE:
         return 0.5  # Recompensa intermediária por empatar
 
     incremento = 0
@@ -155,7 +155,6 @@ def recompensa(estado, acao, novo_estado):
 
     return incremento
 
-
 def escolher_acao(tabuleiro, Q, epsilon=0.1):
     estado_atual = tabuleiro_para_estado(tabuleiro)
     acoes_possiveis = gerar_movimentos(tabuleiro)
@@ -163,17 +162,12 @@ def escolher_acao(tabuleiro, Q, epsilon=0.1):
         return None
 
     if random.random() < epsilon:
-        acao = random.choice(acoes_possiveis)
-        print(f"Escolha aleatória: {acao}")
-        return acao
+        return random.choice(acoes_possiveis)
 
     q_values = {acao: Q[estado_atual][acao] for acao in acoes_possiveis}
     max_q_value = max(q_values.values(), default=0)
     melhores_acoes = [acao for acao, q in q_values.items() if q == max_q_value]
-    acao = random.choice(melhores_acoes)
-    print(f"Valores Q: {q_values}, Escolha: {acao}")
-    return acao
-
+    return random.choice(melhores_acoes)
 
 def atualizar_q(Q, estado, acao, recompensa, novo_estado, alpha, gamma):
     if novo_estado not in Q:
@@ -307,9 +301,8 @@ def treinar_ia(num_partidas, alpha=0.5, gamma=0.9, epsilon=0.01, epsilon_decay=0
 
     for partida in range(num_partidas):
         tabuleiro = Tabuleiro()
-        vitoria_flag = False
 
-        while avaliar_estado(tabuleiro) == Quarto.INDECISO:
+        while not avaliar_estado(tabuleiro).name in ["VITORIA", "EMPATE", "DERROTA"]:
             acao = escolher_acao(tabuleiro, Q, epsilon)
             novo_tabuleiro = fazer_movimento(acao, tabuleiro.copiar())
             if not novo_tabuleiro:
@@ -321,18 +314,15 @@ def treinar_ia(num_partidas, alpha=0.5, gamma=0.9, epsilon=0.01, epsilon_decay=0
 
             tabuleiro = novo_tabuleiro
 
-        if avaliar_estado(tabuleiro) == Quarto.VITORIA:
+        if avaliar_estado(tabuleiro).name == "VITORIA":
             vitorias += 1
-            vitoria_flag = True
 
         epsilon *= epsilon_decay
 
-        # Print progress every 10 games
         if partida % 10 == 0:
-            print(f"Partida {partida}/{num_partidas}: Epsilon {epsilon:.10f}, Taxa de Vitória: {vitorias / (partida + 1) * 100:.2f}%, Vitoria nesta partida: {vitoria_flag}")
+            print(f"Partida {partida}/{num_partidas}: Epsilon {epsilon:.100f}")
 
     return Q
-
 
 def debug_print(Q, tabuleiro, estado_especifico):
     estado_atual = tabuleiro_para_estado(tabuleiro)
