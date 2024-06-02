@@ -1,6 +1,6 @@
 from ia import treinar_ia, jogar_contra_ia, assistir_jogo_ia, carregar_q, salvar_q
 
-if __name__ == "__main__":
+def main():
     Q = carregar_q()
     while True:
         print("\nEscolha uma opção:")
@@ -25,3 +25,6 @@ if __name__ == "__main__":
             break
         else:
             print("Opção inválida. Por favor, escolha uma opção válida.")
+
+if __name__ == "__main__":
+    main()
